@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎃 Halloween English (A1–A2)</title>
+  <style>
+    :root{
+      --bg:#0b0b14; --card:#181826; --accent:#ff7a00; --accent2:#845EF7; --good:#00c853; --bad:#ff5252; --ink:#f8f8ff;
+    }
+    html,body{height:100%;}
+    body{margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: radial-gradient(1200px 600px at 10% 10%, #191930, #0b0b14); color:var(--ink);} 
+    .wrap{max-width:1000px; margin:0 auto; padding:20px 16px 80px;}
+    header{display:flex; gap:16px; align-items:center; justify-content:space-between; background:linear-gradient(135deg, #231942, #0f0f1e); padding:16px 20px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.35); position:sticky; top:0; z-index:5}
+    h1{font-size:clamp(22px, 4vw, 34px); margin:0; display:flex; align-items:center; gap:.5rem}
+    h1 span{filter:drop-shadow(0 2px 0 #000);}    
+    .controls{display:flex; gap:10px; flex-wrap:wrap}
+    button, .btn{cursor:pointer; border:none; padding:10px 14px; border-radius:12px; background:var(--accent); color:#1a0f00; font-weight:700; letter-spacing:.2px; box-shadow:0 6px 16px rgba(255,122,0,.35); transition:transform .06s ease, filter .2s}
+    button:hover{filter:brightness(1.1)}
+    button:active{transform:translateY(1px)}
+    .ghost{background:var(--accent2); color:#fff; box-shadow:0 6px 16px rgba(132,94,247,.35)}
+    .quiet{background:#2a2a44; color:#eaeaff; box-shadow:none}
+    main{display:grid; grid-template-columns:1fr; gap:16px; margin-top:16px}
+
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.09); border-radius:18px; padding:16px; box-shadow:0 8px 30px rgba(0,0,0,.35)}
+    .card h2{margin:.2rem 0 1rem; font-size:clamp(18px, 3vw, 24px)}
+    .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px}
+    .center{display:flex; align-items:center; justify-content:center}
+    .small{font-size:.95rem; opacity:.9}
+    .muted{opacity:.75}
+    .tag{font-size:.8rem; padding:4px 8px; border-radius:999px; border:1px dashed rgba(255,255,255,.25)}
+
+    /* Flashcards */
+    .flash{ perspective: 800px; }
+    .flip{ position: relative; height: 160px; border-radius:16px; transform-style:preserve-3d; transition:transform .5s; background:var(--card); border:1px solid rgba(255,255,255,.08)}
+    .flip:hover{box-shadow:0 10px 24px rgba(0,0,0,.35)}
+    .flip.flipped{ transform: rotateY(180deg); }
+    .side{ position:absolute; inset:0; backface-visibility:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:10px; }
+    .back{ transform: rotateY(180deg); }
+    .emoji{ font-size:42px; }
+    .speak{ position:absolute; top:8px; right:8px; background:#2b2b45; color:#fff; border-radius:10px; font-size:.85rem; padding:6px 8px; border:1px solid rgba(255,255,255,.12)}
+    .flipBtn{ position:absolute; bottom:8px; right:8px; background:#2b2b45; color:#fff; border-radius:10px; font-size:.85rem; padding:6px 8px; border:1px solid rgba(255,255,255,.12)}
+
+    /* Drag & Match */
+    .drag-area{ display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:10px }
+    .drop{ min-height:90px; border:2px dashed rgba(255,255,255,.2); border-radius:14px; padding:10px; display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(255,255,255,.03)}
+    .draggable{ padding:8px 12px; border-radius:12px; background:#282845; border:1px solid rgba(255,255,255,.15); display:inline-flex; gap:8px; align-items:center; margin:4px; }
+    .drop.correct{ border-color:var(--good); box-shadow:0 0 0 3px rgba(0,200,83,.2) inset }
+    .drop.wrong{ border-color:var(--bad); box-shadow:0 0 0 3px rgba(255,82,82,.2) inset }
+
+    /* Sentence builder */
+    select{ background:#1d1d30; color:var(--ink); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.2)}
+
+    /* Quiz */
+    .q{ padding:10px; border-radius:12px; background:#1c1c2f; border:1px solid rgba(255,255,255,.1); margin:8px 0 }
+
+    /* Footer */
+    footer{margin-top:24px; opacity:.9; font-size:.95rem; text-align:center}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1><span>🕯️🎃</span> Halloween English <span class="tag">A1–A2</span></h1>
+      <div class="controls">
+        <button id="btnStart">Start ▶</button>
+        <button class="ghost" id="btnCheck">Check All ✅</button>
+        <button id="btnReset" title="Reset everything">Reset 🔄</button>
+        <button id="voiceToggle" class="quiet" aria-pressed="true">🔊 Voice: On</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- 1. FLASHCARDS -->
+      <section class="card" id="flashcards">
+        <h2>1) Spooky Flashcards — Tap to flip</h2>
+        <p class="small muted">Tap the word/emoji to HEAR it. Use ↩️ Flip to see the sentence and hear it.</p>
+        <div class="grid" id="flashGrid"></div>
+      </section>
+
+      <!-- 2. DRAG & MATCH -->
+      <section class="card" id="match">
+        <h2>2) Drag & Match — Word to Picture</h2>
+        <p class="small muted">Drag the <strong>word</strong> chips onto the matching <strong>picture</strong>. Tap 🔊 to hear the word.</p>
+        <div class="grid">
+          <div>
+            <div id="dragWords"></div>
+          </div>
+          <div class="drag-area" id="dropArea"></div>
+        </div>
+      </section>
+
+      <!-- 3. SENTENCE BUILDER -->
+      <section class="card" id="builder">
+        <h2>3) Sentence Builder</h2>
+        <p class="small muted">Choose the best word to complete each sentence. Tap 🔊 to hear it.</p>
+        <div class="q">
+          <button class="speak" data-txt="The cat is wearing a witch hat.">🔊</button>
+          1) The <select data-ans="cat">
+            <option value="">— choose —</option>
+            <option>cat</option><option>table</option><option>banana</option>
+          </select> is wearing a witch hat.
+        </div>
+        <div class="q">
+          <button class="speak" data-txt="I can see a moon in the dark sky.">🔊</button>
+          2) I can see a <select data-ans="moon">
+            <option value="">— choose —</option>
+            <option>room</option><option>moon</option><option>noon</option>
+          </select> in the dark sky.
+        </div>
+        <div class="q">
+          <button class="speak" data-txt="The pumpkin is orange and big.">🔊</button>
+          3) The pumpkin is <select data-ans="orange">
+            <option value="">— choose —</option>
+            <option>green</option><option>blue</option><option>orange</option>
+          </select> and big.
+        </div>
+      </section>
+
+      <!-- 4. MINI STORY + QUIZ -->
+      <section class="card" id="story">
+        <h2>4) Mini Story + Quiz</h2>
+        <p class="small">Read the short story and answer the questions.</p>
+        <div class="q" style="background:#141428; position:relative">
+          <button class="speak" data-txt="It is Halloween night. Mia and Leo wear costumes. Mia is a witch and Leo is a vampire. They knock on doors and say, Trick or treat! A friendly cat follows them. Under the bright moon, they share candy and smile.">🔊</button>
+          <p><strong>Story:</strong> It is Halloween night. Mia and Leo wear costumes. Mia is a witch and Leo is a vampire. They knock on doors and say, “Trick or treat!” A friendly cat follows them. Under the bright moon, they share candy and smile.</p>
+        </div>
+        <div class="q">
+          A) Who is a vampire? <br>
+          <label><input type="radio" name="q1" value="Mia"> Mia</label>
+          <label><input type="radio" name="q1" value="Leo"> Leo</label>
+          <label><input type="radio" name="q1" value="Cat"> The cat</label>
+        </div>
+        <div class="q">
+          B) What follows them? <br>
+          <label><input type="radio" name="q2" value="Dog"> A dog</label>
+          <label><input type="radio" name="q2" value="Cat"> A cat</label>
+          <label><input type="radio" name="q2" value="Ghost"> A ghost</label>
+        </div>
+        <div class="q">
+          C) When is the story? <br>
+          <label><input type="radio" name="q3" value="Morning"> Morning</label>
+          <label><input type="radio" name="q3" value="Halloween night"> Halloween night</label>
+          <label><input type="radio" name="q3" value="Summer"> Summer</label>
+        </div>
+      </section>
+
+      <!-- 5. WORD SCRAMBLE -->
+      <section class="card" id="scramble">
+        <h2>5) Spelling: Unscramble the Word</h2>
+        <p class="small muted">Put the letters in order. Double‑click a letter to send it back.</p>
+        <div id="scrambleArea"></div>
+      </section>
+
+      <!-- 6. SPEAKING PROMPTS -->
+      <section class="card" id="speaking">
+        <h2>6) Speaking Dice</h2>
+        <p class="small muted">Click the button to get a question. Speak for 10–20 seconds. Tap 🔊 to hear the question.</p>
+        <div class="center" style="gap:10px; flex-wrap:wrap">
+          <button id="btnPrompt" class="ghost">Roll 👻</button>
+          <button id="btnPromptSpeak" class="quiet" title="Read the current question">🔊 Read</button>
+          <div id="promptBox" class="tag" style="min-width:280px; text-align:center; padding:10px 12px; background:#1e1e33"></div>
+        </div>
+      </section>
+
+      <!-- SCOREBOARD -->
+      <section class="card" id="score">
+        <h2>Progress / Score</h2>
+        <p class="small muted">Use <strong>Check All</strong> to see your score. You can try again!</p>
+        <div id="scoreBox" class="center" style="gap:10px; flex-wrap:wrap">
+          <span>Flashcards viewed: <strong id="seenCount">0</strong>/10</span>
+          <span>Matches: <strong id="matchScore">0</strong>/8</span>
+          <span>Builder: <strong id="builderScore">0</strong>/3</span>
+          <span>Story Quiz: <strong id="quizScore">0</strong>/3</span>
+          <span>Scramble: <strong id="scrambleScore">0</strong>/1</span>
+        </div>
+      </section>
+
+      <footer class="center">🎃🧙 Created by Panagiotis Domvros, English and Drama Teacher, All Rights Reserved 🧙🎃</footer>
+    </main>
+  </div>
+
+  <script>
+    // --- DATA ---
+    const FLASH = [
+      {w:'pumpkin', e:'🎃', s:'The pumpkin is orange.'},
+      {w:'witch', e:'🧙‍♀️', s:'The witch has a hat.'},
+      {w:'ghost', e:'👻', s:'The ghost is white.'},
+      {w:'vampire', e:'🧛‍♂️', s:'The vampire has teeth.'},
+      {w:'cat', e:'🐈', s:'The cat is black.'},
+      {w:'spider', e:'🕷️', s:'A spider has eight legs.'},
+      {w:'bat', e:'🦇', s:'The bat flies at night.'},
+      {w:'candy', e:'🍬', s:'They share candy.'},
+      {w:'moon', e:'🌕', s:'The moon is bright.'},
+      {w:'broom', e:'🧹', s:'The witch has a broom.'},
+    ];
+
+    const MATCH = [
+      {word:'pumpkin', emoji:'🎃'},
+      {word:'ghost', emoji:'👻'},
+      {word:'bat', emoji:'🦇'},
+      {word:'witch', emoji:'🧙‍♀️'},
+      {word:'spider', emoji:'🕷️'},
+      {word:'cat', emoji:'🐈'},
+      {word:'moon', emoji:'🌕'},
+      {word:'candy', emoji:'🍬'},
+    ];
+
+    const PROMPTS = [
+      'What costume do you like? Why?',
+      'What do you say at the door on Halloween?',
+      'Describe a pumpkin with three words.',
+      'What can you see at night?',
+      'Do you like candy? Which one?',
+      'Name three Halloween animals.',
+      "What colour is a witch's hat?",
+      'What makes you laugh on Halloween?',
+      'Would you go to a haunted house? Why or why not?',
+      'What is your favourite spooky emoji?'
+    ];
+
+    const SCRAMBLE_WORDS = ['pumpkin','witch','ghost','vampire','spider','broom'];
+
+    // --- UTIL ---
+    const $ = s => document.querySelector(s);
+    const $$ = s => [...document.querySelectorAll(s)];
+    const shuffle = arr => arr.sort(()=>Math.random()-.5);
+
+    // --- SPEECH SYNTHESIS (UK male preferred) ---
+    let voiceOn = true;
+    let ukMaleVoice = null;
+
+    function pickUKMaleVoice(){
+      if(!('speechSynthesis' in window)) return null;
+      const voices = window.speechSynthesis.getVoices();
+      if(!voices || !voices.length) return null;
+      const prefer = [
+        v => /Google UK English Male/i.test(v.name),
+        v => /Daniel/i.test(v.name),
+        v => v.lang === 'en-GB' && /male/i.test(v.name),
+        v => v.lang === 'en-GB'
+      ];
+      for(const tester of prefer){
+        const found = voices.find(tester);
+        if(found) return found;
+      }
+      return voices[0];
+    }
+
+    function speak(text){
+      if(!voiceOn || !('speechSynthesis' in window)) return;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'en-GB';
+      utter.pitch = 1;
+      utter.rate = 1;
+      if(ukMaleVoice) utter.voice = ukMaleVoice;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utter);
+    }
+
+    if('speechSynthesis' in window){
+      window.speechSynthesis.onvoiceschanged = () => { ukMaleVoice = pickUKMaleVoice(); };
+      ukMaleVoice = pickUKMaleVoice();
+    }
+
+    $('#voiceToggle').addEventListener('click', () => {
+      voiceOn = !voiceOn;
+      $('#voiceToggle').textContent = voiceOn ? '🔊 Voice: On' : '🔈 Voice: Off';
+      $('#voiceToggle').setAttribute('aria-pressed', String(voiceOn));
+      if(!voiceOn && 'speechSynthesis' in window){ window.speechSynthesis.cancel(); }
+    });
+
+    // --- FLASHCARDS ---
+    let seenSet = new Set();
+    function renderFlash(){
+      const g = $('#flashGrid'); g.innerHTML='';
+      FLASH.forEach((f,i)=>{
+        const c = document.createElement('div'); c.className='flash';
+        c.innerHTML = `
+          <div class="flip" data-i="${i}">
+            <div class="side front">
+              <button class="speak" data-txt="${f.w}" title="Hear word">🔊</button>
+              <div class="emoji" data-role="sayWord">${f.e}</div>
+              <div><strong data-role="sayWord">${f.w}</strong></div>
+              <button class="flipBtn" title="Flip card">↩️ Flip</button>
+            </div>
+            <div class="side back">
+              <button class="speak" data-txt="${f.s}" title="Hear sentence">🔊</button>
+              <div class="emoji" data-role="saySentence">${f.e}</div>
+              <div class="small" data-role="saySentence">${f.s}</div>
+              <button class="flipBtn" title="Flip card">↩️ Flip</button>
+            </div>
+          </div>`;
+
+        const flipper = c.firstElementChild;
+        c.addEventListener('click', (ev)=>{
+          const speakBtn = ev.target.closest('.speak');
+          if(speakBtn){ ev.stopPropagation(); speak(speakBtn.dataset.txt); return; }
+          if(ev.target.matches('[data-role="sayWord"]')){ ev.stopPropagation(); speak(f.w); return; }
+          if(ev.target.matches('[data-role="saySentence"]')){ ev.stopPropagation(); speak(f.s); return; }
+          if(ev.target.closest('.flipBtn')){ ev.stopPropagation(); flipper.classList.toggle('flipped'); seenSet.add(i); updateScore(); return; }
+        });
+        g.appendChild(c);
+      });
+    }
+
+    // --- DRAG & MATCH ---
+    function renderMatch(){
+      const wordsBox = $('#dragWords'); wordsBox.innerHTML='';
+      const drops = $('#dropArea'); drops.innerHTML='';
+      shuffle(MATCH).forEach(m=>{
+        const chip = document.createElement('span');
+        chip.className='draggable'; chip.innerHTML=`${m.word} <button class="speak" data-txt="${m.word}" title="Hear">🔊</button>`; chip.draggable=true; chip.dataset.word=m.word;
+        chip.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', m.word); });
+        chip.addEventListener('click', e=>{ const b=e.target.closest('.speak'); if(b){ e.stopPropagation(); speak(m.word); }});
+        wordsBox.appendChild(chip);
+      });
+      shuffle(MATCH).forEach(m=>{
+        const d = document.createElement('div'); d.className='drop'; d.dataset.word=m.word;
+        d.innerHTML = `<span class="emoji">${m.emoji}</span>`;
+        d.addEventListener('dragover', e=> e.preventDefault());
+        d.addEventListener('drop', e=>{
+          e.preventDefault(); const w = e.dataTransfer.getData('text/plain');
+          if(w===d.dataset.word){ d.classList.remove('wrong'); d.classList.add('correct'); d.innerHTML = `<span class="emoji">${m.emoji}</span> <strong>${w}</strong>`; speak(`${w}`); updateScore(); }
+          else { d.classList.add('wrong'); setTimeout(()=>d.classList.remove('wrong'), 800); }
+        });
+        drops.appendChild(d);
+      });
+    }
+
+    // --- SENTENCE BUILDER ---
+    function scoreBuilder(){
+      let s=0; $$('#builder select').forEach(sel=>{ if(sel.value===sel.dataset.ans) s++; });
+      return s;
+    }
+
+    // --- STORY QUIZ ---
+    function scoreQuiz(){
+      const ans = {q1:'Leo', q2:'Cat', q3:'Halloween night'};
+      let s=0; for(const k in ans){ const v = $$(`input[name="${k}"]:checked`)[0]?.value; if(v===ans[k]) s++; }
+      return s;
+    }
+
+    // --- SCRAMBLE ---
+    let currentScramble = '';
+    function renderScramble(){
+      const area = $('#scrambleArea');
+      currentScramble = shuffle([...shuffle(SCRAMBLE_WORDS)[0]]).join('');
+      area.innerHTML = `
+        <div class="small muted">Word: <strong id="scrWord">${currentScramble}</strong></div>
+        <div id="letters" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;"></div>
+        <div style="margin-top:8px;">Your answer: <strong id="built"></strong></div>
+        <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
+          <button id="clearScr">Clear</button>
+          <button id="newScr" class="ghost">New word</button>
+        </div>`;
+      const L = $('#letters');
+      [...currentScramble].forEach(ch=>{
+        const el=document.createElement('button'); el.textContent=ch; el.className='btn'; el.addEventListener('click',()=>{
+          $('#built').textContent += ch; updateScore();
+        });
+        el.addEventListener('dblclick',()=>{
+          const txt = $('#built').textContent; $('#built').textContent = txt.slice(0,-1);
+        });
+        L.appendChild(el);
+      });
+      $('#clearScr').onclick=()=>$('#built').textContent='';
+      $('#newScr').onclick=()=>renderScramble();
+    }
+    function scoreScramble(){
+      const answer = $('#built').textContent.trim().toLowerCase();
+      const options = SCRAMBLE_WORDS;
+      return options.includes(answer) ? 1 : 0;
+    }
+
+    // --- SPEAKING PROMPT BUTTONS ---
+    $('#btnPrompt').addEventListener('click',()=>{
+      const text = shuffle([...PROMPTS])[0]; $('#promptBox').textContent = text;
+    });
+    $('#btnPromptSpeak').addEventListener('click',()=>{
+      const t = $('#promptBox').textContent.trim(); if(t) speak(t);
+    });
+
+    // --- SCOREBOARD ---
+    function updateScore(){
+      $('#seenCount').textContent = seenSet.size;
+      $('#matchScore').textContent = $$('#dropArea .correct').length;
+      $('#builderScore').textContent = scoreBuilder();
+      $('#quizScore').textContent = scoreQuiz();
+      $('#scrambleScore').textContent = scoreScramble();
+    }
+
+    // --- CHECK / RESET / START ---
+    $('#btnCheck').addEventListener('click',()=>{
+      updateScore();
+      const total = seenSet.size + $$('#dropArea .correct').length + scoreBuilder() + scoreQuiz() + scoreScramble();
+      const max = FLASH.length + MATCH.length + 3 + 3 + 1; // 10 + 8 + 3 + 3 + 1 = 25
+      const pct = Math.round(100*total/max);
+      const msg = pct>=80 ? 'Amazing! 🎉' : pct>=60 ? 'Great job! 👍' : 'Keep trying! 💪';
+      alert(`Your score: ${total}/${max} (${pct}%).\n${msg}`);
+    });
+
+    $('#btnReset').addEventListener('click',()=>{
+      seenSet.clear(); renderFlash(); renderMatch(); $$('#builder select').forEach(s=>s.value=''); $$('input[type=radio]').forEach(r=>r.checked=false); renderScramble(); updateScore();
+    });
+
+    $('#btnStart').addEventListener('click',()=>{
+      window.scrollTo({top:document.querySelector('main').offsetTop, behavior:'smooth'});
+    });
+
+    // INIT
+    renderFlash(); renderMatch(); renderScramble(); updateScore();
+  </script>
+</body>
+</html>
